@@ -40,7 +40,7 @@ func main() {
 func simulateRun(rank int, stars int, winRate float64) int {
 	games := 0
 	winStreak := 0
-	for !legend(rank) && !timeout(games) {
+	for !isLegend(rank) && !reachedLimit(games) {
 		games++
 
 		if simulateMatch(winRate) {
@@ -54,12 +54,12 @@ func simulateRun(rank int, stars int, winRate float64) int {
 	return games
 }
 
-func timeout(games int) bool {
-	return games >= maxGames
+func isLegend(rank int) bool {
+	return rank == 0
 }
 
-func legend(rank int) bool {
-	return rank == 0
+func reachedLimit(games int) bool {
+	return games >= maxGames
 }
 
 func simulateMatch(winRate float64) bool {
