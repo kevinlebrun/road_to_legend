@@ -6,6 +6,7 @@ import (
 	"math/rand"
 )
 
+// maxGames is a safety limit to ensure we don't run in an infinite loop.
 const maxGames = 10000
 
 var rankMilestone = map[int]struct{}{
@@ -48,9 +49,9 @@ func main() {
 		results = append(results, games)
 	}
 
-	avg := averageResults(results)
+	min, max, avg := stats(results)
 
-	fmt.Printf("avg number of matches: %.2f\n", avg)
+	fmt.Printf("estimated number of matches: %.2f (min: %d, max: %d)\n", avg, min, max)
 }
 
 func simulateMatch(winRate float64) bool {
@@ -99,11 +100,24 @@ func milestone(rank int) bool {
 	return ok
 }
 
-func averageResults(results []int) float64 {
-	total := 0
-	for _, games := range results {
-		total += games
+func stats(results []int) (int, int, float64) {
+	if len(results) == 0 {
+		return 0, 0, .0
 	}
-	avg := float64(total) / float64(len(results))
-	return avg
+
+	total := results[0]
+	min := results[0]
+	max := results[0]
+
+	for i := 1; i < len(results); i++ {
+		total += results[i]
+		if results[i] < min {
+			min = results[i]
+		}
+		if results[i] > max {
+			max = results[i]
+		}
+	}
+
+	return min, max, float64(total) / float64(len(results))
 }

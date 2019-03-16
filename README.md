@@ -2,6 +2,8 @@
 
 Small tool to estimate the number of matches remaining to reach legend in Hearthstone.
 
+(based on the rules here: https://hearthstone.gamepedia.com/Ranked)
+
 ## Usage
 
 ```bash
