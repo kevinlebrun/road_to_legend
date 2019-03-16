@@ -29,29 +29,29 @@ func main() {
 	results := make([]int, 0, *runs)
 
 	for i := 0; i < *runs; i++ {
-		rank := *startingRank
-		stars := *startingStar
-		winStreak := 0
-		games := 0
-
-		for !legend(rank) && !timeout(games) {
-			games++
-
-			if simulateMatch(*winRate) {
-				winStreak++
-				rank, stars = winStar(rank, stars, winStreak)
-			} else {
-				winStreak = 0
-				rank, stars = looseStar(rank, stars)
-			}
-		}
-
-		results = append(results, games)
+		results = append(results, simulateRun(*startingRank, *startingStar, *winRate))
 	}
 
 	min, max, avg := stats(results)
 
 	fmt.Printf("estimated number of matches: %.2f (min: %d, max: %d)\n", avg, min, max)
+}
+
+func simulateRun(rank int, stars int, winRate float64) int {
+	games := 0
+	winStreak := 0
+	for !legend(rank) && !timeout(games) {
+		games++
+
+		if simulateMatch(winRate) {
+			winStreak++
+			rank, stars = winStar(rank, stars, winStreak)
+		} else {
+			winStreak = 0
+			rank, stars = looseStar(rank, stars)
+		}
+	}
+	return games
 }
 
 func timeout(games int) bool {
