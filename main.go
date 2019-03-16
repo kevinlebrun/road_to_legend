@@ -34,7 +34,7 @@ func main() {
 		winStreak := 0
 		games := 0
 
-		for rank > 0 && games < maxGames {
+		for !legend(rank) && !timeout(games) {
 			games++
 
 			if simulateMatch(*winRate) {
@@ -52,6 +52,14 @@ func main() {
 	min, max, avg := stats(results)
 
 	fmt.Printf("estimated number of matches: %.2f (min: %d, max: %d)\n", avg, min, max)
+}
+
+func timeout(games int) bool {
+	return games >= maxGames
+}
+
+func legend(rank int) bool {
+	return rank == 0
 }
 
 func simulateMatch(winRate float64) bool {
